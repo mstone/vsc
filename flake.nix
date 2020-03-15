@@ -1,6 +1,6 @@
 
 {
-  description = "A flake for building vscodium with appropriate extensions";
+  description = "A flake for building vscodium with selected extensions";
 
   edition = 201909;
 
@@ -43,6 +43,12 @@
           version = "0.7.0";
           sha256 = "sha256-QPO5IA5mrYo6cn3hdTjmzhbRN/YU7G4yMspJ+dRBx5o=";
         }
+        {
+          name = "asciidoctor-vscode";
+          publisher = "joaompinto";
+          version = "2.7.13";
+          sha256 = "sha256-os4vsusgf6izymcvUAN+XCJFBuG0fzh+gIxabHgxjeI=";
+        }
       ];
     };
 
@@ -54,7 +60,7 @@
       phases = [ "installPhase" ];
       installPhase = ''
         mkdir -p $out/bin
-        makeWrapper ${vsc}/bin/codium $out/bin/codium --prefix PATH : ${lib.makeBinPath [ go_1_13 rust1 ]}
+        makeWrapper ${vsc}/bin/codium $out/bin/codium --prefix PATH : ${lib.makeBinPath [ go_1_13 rust1 asciidoctor ]}
       '';
       buildInputs = [
         makeWrapper
