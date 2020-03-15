@@ -1,5 +1,23 @@
 {
   "inputs": {
+    "moz_overlay_src": {
+      "info": {
+        "lastModified": 1582134900,
+        "narHash": "sha256-Qw75AH10FsjcFMNKEFQ+VRNXQvvQx8CWmnMBxNH62yE=",
+        "revCount": 191
+      },
+      "inputs": {},
+      "locked": {
+        "ref": "master",
+        "rev": "e912ed483e980dfb4666ae0ed17845c4220e5e7c",
+        "type": "git",
+        "url": "https://github.com/mozilla/nixpkgs-mozilla"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://github.com/mozilla/nixpkgs-mozilla"
+      }
+    },
     "nixpkgs": {
       "info": {
         "lastModified": 1584221457,
