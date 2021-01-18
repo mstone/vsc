@@ -2,79 +2,49 @@
 {
   description = "A flake for building vscodium with selected extensions";
 
-  edition = 201909;
+  inputs.nixpkgs.url = "nixpkgs";
+  inputs.flake-utils.url = "github:numtide/flake-utils";
+  inputs.rust-overlay.url = "github:oxalica/rust-overlay";
+  inputs.rust-overlay.inputs.flake-utils.follows = "flake-utils";
+  inputs.rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
 
-  inputs = {
+  outputs = { self, nixpkgs, flake-utils, rust-overlay }: flake-utils.lib.simpleFlake {
+    inherit self nixpkgs;
+    name = "vsc";
+    preOverlays = [ rust-overlay.overlay ];
+    systems = [ "x86_64-linux" "x86_64-darwin" ];
+    overlay = final: prev: {
+      vsc = with final; rec {
+        env = [ rust-bin.stable.latest.rust asciidoctor ];
 
-    nixpkgs = {
-      uri = "nixpkgs";
+        wrapper = vscode-with-extensions.override {
+          vscode = vscodium;
+          vscodeExtensions = with vscode-extensions; [
+            bbenoist.Nix
+            matklad.rust-analyzer
+          ] ++ vscode-utils.extensionsFromVscodeMarketplace [
+            {
+              name = "asciidoctor-vscode";
+              publisher = "joaompinto";
+              version = "2.7.13";
+              sha256 = "sha256-os4vsusgf6izymcvUAN+XCJFBuG0fzh+gIxabHgxjeI=";
+            }
+          ];
+        };
+
+	codium = stdenv.mkDerivation {
+          pname = "codium";
+          version = "1.0";
+          phases = ["installPhase"];
+          installPhase = ''
+            mkdir -p $out/bin;
+            makeWrapper ${wrapper}/bin/codium $out/bin/codium --prefix PATH : ${lib.makeBinPath env}
+          '';
+          buildInputs = [ makeWrapper ];
+        };
+
+        defaultPackage = codium;
+      };
     };
-
-    moz_overlay_src = {
-      url = "git+https://github.com/mozilla/nixpkgs-mozilla";
-      flake = false;
-    };
-
-  };
-
-  outputs = { self, nixpkgs, moz_overlay_src }: let
-
-    moz_overlay = import moz_overlay_src;
-
-    nps = import nixpkgs { system = "x86_64-darwin"; overlays = [ moz_overlay ]; };
-
-    rust1 = with nps; (rustChannelOf {
-      channel = "stable";
-      date = "2020-03-12";
-      sha256 = "0pddwpkpwnihw37r8s92wamls8v0mgya67g9m8h6p5zwgh4il1z6";
-    }).rust.override {
-      targets = ["wasm32-unknown-unknown"];
-    };
-
-    vsc = with nps; vscode-with-extensions.override {
-      vscode = vscodium;
-      vscodeExtensions = with vscode-extensions; [
-        bbenoist.Nix
-        ms-vscode.Go
-      ] ++ vscode-utils.extensionsFromVscodeMarketplace [
-        {
-          name = "rust";
-          publisher = "rust-lang";
-          version = "0.7.0";
-          sha256 = "sha256-QPO5IA5mrYo6cn3hdTjmzhbRN/YU7G4yMspJ+dRBx5o=";
-        }
-        {
-          name = "asciidoctor-vscode";
-          publisher = "joaompinto";
-          version = "2.7.13";
-          sha256 = "sha256-os4vsusgf6izymcvUAN+XCJFBuG0fzh+gIxabHgxjeI=";
-        }
-      ];
-    };
-
-  in rec {
-
-    packages.x86_64-darwin.vsc = with nixpkgs.legacyPackages.x86_64-darwin; stdenv.mkDerivation {
-      pname = "vsc";
-      version = "1.0";
-      phases = [ "installPhase" ];
-      installPhase = ''
-        mkdir -p $out/bin
-        makeWrapper ${vsc}/bin/codium $out/bin/codium --prefix PATH : ${lib.makeBinPath [ go_1_13 rust1 asciidoctor ]}
-      '';
-      buildInputs = [
-        makeWrapper
-      ];
-    };
-
-    defaultPackage.x86_64-darwin = packages.x86_64-darwin.vsc;
-
-    apps.x86_64-darwin.vsc = {
-      type = "app";
-      program = "${self.packages.x86_64-darwin.vsc}/bin/codium";
-    };
-
-    defaultApp.x86_64-darwin = apps.x86_64-darwin.vsc;
-
   };
 }
