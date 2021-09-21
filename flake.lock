@@ -1,27 +1,28 @@
 {
   "nodes": {
-    "flake-utils": {
+    "codiumSrc": {
+      "flake": false,
       "locked": {
-        "lastModified": 1610051610,
-        "narHash": "sha256-U9rPz/usA1/Aohhk7Cmc2gBrEEKRzcW4nwPWMPwja4Y=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "3982c9903e93927c2164caa727cd3f6a0e6d14cc",
+        "lastModified": 1630614859,
+        "narHash": "sha256-VkWkYQAhl04gwDt4EqeoE8nLS1y7dw6ZouzeXnfPYHM=",
+        "owner": "VSCodium",
+        "repo": "vscodium",
+        "rev": "d862b86a2789a34a8e281abf3950129f95f447b4",
         "type": "github"
       },
       "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
+        "owner": "VSCodium",
+        "repo": "vscodium",
         "type": "github"
       }
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1613821681,
-        "narHash": "sha256-hc5IoBRc8yG2PUaoonMosFa0cHy/YEK5WWim9VmV0Ds=",
+        "lastModified": 1630779579,
+        "narHash": "sha256-yo6/sxIAWpe1CZWVp4m5an87J6soyQgNtNxDTMPBzr4=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "e59a33db58feb4d4c0c58cee6d859a85324110dc",
+        "rev": "1c7e40b7581842a74537907490ba4343cc23e59a",
         "type": "github"
       },
       "original": {
@@ -31,27 +32,29 @@
     },
     "root": {
       "inputs": {
-        "flake-utils": "flake-utils",
+        "codiumSrc": "codiumSrc",
         "nixpkgs": "nixpkgs",
         "rust-overlay": "rust-overlay",
-        "vscode-drawio": "vscode-drawio"
+        "utils": "utils",
+        "vscode-drawio": "vscode-drawio",
+        "vscodeSrc": "vscodeSrc"
       }
     },
     "rust-overlay": {
       "inputs": {
         "flake-utils": [
-          "flake-utils"
+          "utils"
         ],
         "nixpkgs": [
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1613787947,
-        "narHash": "sha256-aNRCRAZAgzxEYWnztF8iuDX3OCPGrwlq+jxBmEPEQO4=",
+        "lastModified": 1630721719,
+        "narHash": "sha256-vwsj86ShPhIChGpFmqCDBDbbcXwyv9IZrebo6vDZ9H4=",
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "rev": "791bab9cba25a8990774a969cad37c38a3c6c1c3",
+        "rev": "1fc1a35ed2adfd7cdb781b8605383fef885e3aad",
         "type": "github"
       },
       "original": {
@@ -60,14 +63,29 @@
         "type": "github"
       }
     },
+    "utils": {
+      "locked": {
+        "lastModified": 1629481132,
+        "narHash": "sha256-JHgasjPR0/J1J3DRm4KxM4zTyAj4IOJY8vIl75v/kPI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "997f7efcb746a9c140ce1f13c72263189225f482",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "vscode-drawio": {
       "flake": false,
       "locked": {
-        "lastModified": 1613338986,
-        "narHash": "sha256-Ceu7S2NkZYZaZlyheIVkhEmVqao6PTzV6IWzNoBqFJM=",
+        "lastModified": 1630329987,
+        "narHash": "sha256-eUdz399fF+T7dFNPayitnGQEGl2VrxcH7lJ4+JnzHhw=",
         "ref": "master",
-        "rev": "741e2d17c038baffcd3198687dd5508d09731200",
-        "revCount": 212,
+        "rev": "c3ce165d79bb0dc3677b061a84be79b3dac9c277",
+        "revCount": 263,
         "submodules": true,
         "type": "git",
         "url": "https://github.com/hediet/vscode-drawio"
@@ -76,6 +94,22 @@
         "submodules": true,
         "type": "git",
         "url": "https://github.com/hediet/vscode-drawio"
+      }
+    },
+    "vscodeSrc": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1630771111,
+        "narHash": "sha256-frZ8H/7k5WeNOLkSpoX78p1eZuh2wzkrQqrNrvEIXP4=",
+        "owner": "microsoft",
+        "repo": "vscode",
+        "rev": "997228d528d687fd17cbf3ba117a0d4f668c1393",
+        "type": "github"
+      },
+      "original": {
+        "owner": "microsoft",
+        "repo": "vscode",
+        "type": "github"
       }
     }
   },
