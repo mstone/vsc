@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "clangdExtensionSrc": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1629808711,
+        "narHash": "sha256-t0Wq8fGwSalKf4oNQSsJ5t7EPrlix1P1sZDlGDhNLiE=",
+        "owner": "clangd",
+        "repo": "vscode-clangd",
+        "rev": "80ae6bcebe780ab8687ab2e69d4c036db4245ea5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "clangd",
+        "repo": "vscode-clangd",
+        "type": "github"
+      }
+    },
     "codiumSrc": {
       "flake": false,
       "locked": {
@@ -32,6 +48,7 @@
     },
     "root": {
       "inputs": {
+        "clangdExtensionSrc": "clangdExtensionSrc",
         "codiumSrc": "codiumSrc",
         "nixpkgs": "nixpkgs",
         "rust-overlay": "rust-overlay",
