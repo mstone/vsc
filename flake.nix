@@ -2,11 +2,11 @@
 {
   description = "A flake for building codium with selected extensions";
 
-  inputs.nixpkgs.url = "nixpkgs";
+  inputs.nixpkgs.url = "github:mstone/nixpkgs/rust-analyzer-2022-02-14";
 
   inputs.utils.url = "github:numtide/flake-utils";
 
-  inputs.codiumSrc.url = "github:VSCodium/vscodium";
+  inputs.codiumSrc.url = "github:mstone/vscodium";
   inputs.codiumSrc.flake = false;
 
   inputs.vscodeSrc.url = "github:microsoft/vscode";
@@ -49,12 +49,12 @@
 
         codiumFromSrc = stdenv.mkDerivation {
           pname = "codium";
-          version = "1.59.1";
+          version = "1.64.2";
           longName = "codium";
           shortName = "codium";
           executableName = "vscodium";
           src = codiumSrc;
-          buildInputs = [ nodejs-14_x git cacert yarn python39 fakeSwVers jq ] ++ (with darwin.apple_sdk.frameworks; [ Security AppKit Cocoa ]);
+          buildInputs = [ nodejs-14_x git cacert yarn python39 fakeSwVers jq xcbuild ] ++ (with darwin.apple_sdk.frameworks; [ Security AppKit Cocoa ]);
           nativeBuildInputs = [ darwin.cctools hdiutilWrapper ];
           buildPhase = ''
             #set -x
@@ -147,7 +147,7 @@
           vscode = codiumGeneric;
           vscodeExtensions = with vscode-extensions; [
             bbenoist.nix
-            #matklad.rust-analyzer
+            matklad.rust-analyzer
             golang.go
             hediet.vscode-drawio
             #llvm-vs-code-extensions.vscode-clangd
