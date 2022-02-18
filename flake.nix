@@ -35,9 +35,24 @@
     };
     overlay = final: prev: {
       codium = with final; rec {
-        # env = [ rust-bin.stable.latest.default asciidoctor wkhtmltopdf go_1_16 ];
-        #env = [ python39 coreutils gitFull clang clang-tools ];
 	env = [ rust-bin.stable.latest.default asciidoctor go_1_16 python39 coreutils gitFull ];
+
+        codiumVersion = "1.65.0";
+
+        # nixpkgs and vscode use refer to the same target systems via different system doubles
+        # https://github.com/NixOS/nixpkgs/blob/master/lib/systems/doubles.nix
+        # https://github.com/microsoft/vscode/blob/main/build/azure-pipelines/product-build.yml
+        codiumOsName = {
+          darwin = "osx";
+          linux = "linux";
+        }."${lib.elemAt (lib.splitString "-" system) 1}";
+
+        codiumArch = {
+          aarch64 = "arm64";
+          armv7l = "armhf";
+          x86_64 = "x64";
+          i686 = "ia32";
+        }."${lib.elemAt (lib.splitString "-" system) 0}";
 
         fakeSwVers = writeShellScriptBin "sw_vers" ''
           echo 10.15
@@ -49,13 +64,26 @@
 
         codiumFromSrc = stdenv.mkDerivation {
           pname = "codium";
-          version = "1.64.2";
+          version = codiumVersion;
           longName = "codium";
           shortName = "codium";
           executableName = "vscodium";
           src = codiumSrc;
-          buildInputs = [ nodejs-14_x git cacert yarn python39 fakeSwVers jq xcbuild ] ++ (with darwin.apple_sdk.frameworks; [ Security AppKit Cocoa ]);
-          nativeBuildInputs = [ darwin.cctools hdiutilWrapper ];
+          buildInputs = [
+            nodejs-14_x
+            git
+            cacert
+            yarn
+            python39
+            fakeSwVers
+            jq
+            xcbuild
+          ] ++ lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
+            Security
+            AppKit
+            Cocoa
+          ]);
+          nativeBuildInputs = lib.optionals stdenv.isDarwin [ darwin.cctools hdiutilWrapper ];
           buildPhase = ''
             #set -x
             #set -euo pipefail
@@ -65,9 +93,8 @@
             # remove postinstall commands that expect vscode/.git
             head -n -2 vscode/build/npm/postinstall.js > js.tmp
             mv js.tmp vscode/build/npm/postinstall.js
-            rm patches/custom-gallery.patch patches/use-github-pat.patch
             mkdir yarn
-            HOME=$(pwd)/yarn MS_COMMIT=${vscodeSrc.rev} SHOULD_BUILD=yes CI_BUILD=no OS_NAME=osx VSCODE_ARCH=arm64 . build.sh
+            HOME=$(pwd)/yarn MS_COMMIT=${vscodeSrc.rev} SHOULD_BUILD=yes CI_BUILD=no OS_NAME=${codiumOsName} VSCODE_ARCH=${codiumArch} . build.sh
           '';
           installPhase = ''
             cp -a ./ $out/
@@ -76,7 +103,7 @@
 
         codiumSubset = stdenv.mkDerivation {
           pname = "codium";
-          version = "1.59.1";
+          version = codiumVersion;
           src = codiumFromSrc;
           phases = [ "installPhase" ];
           installPhase = ''
@@ -87,7 +114,7 @@
 
         codiumGeneric = callPackage "${nixpkgs}/pkgs/applications/editors/vscode/generic.nix" rec {
           sourceRoot = "";
-          version = "1.59.1";
+          version = codiumVersion;
           pname = "vscodium";
           executableName = "codium";
           longName = "VSCodium";
@@ -148,6 +175,7 @@
           vscodeExtensions = with vscode-extensions; [
             bbenoist.nix
             matklad.rust-analyzer
+            usernamehw.errorlens
             golang.go
             hediet.vscode-drawio
             #llvm-vs-code-extensions.vscode-clangd
@@ -156,7 +184,7 @@
 
         codium = stdenv.mkDerivation {
           pname = "codium";
-          version = "1.0";
+          version = codiumVersion;
           phases = ["installPhase"];
           installPhase = ''
             mkdir -p $out/bin;

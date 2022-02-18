@@ -19,11 +19,11 @@
     "codiumSrc": {
       "flake": false,
       "locked": {
-        "lastModified": 1645049113,
-        "narHash": "sha256-hGuD0iGVKw+DkQzomr81sKm2vv0+ghJJc4w/0fwaFgA=",
+        "lastModified": 1645218101,
+        "narHash": "sha256-SBec50LEJufDhyI55FO0eL3OLTLH5AL9dFV63LUYc+M=",
         "owner": "mstone",
         "repo": "vscodium",
-        "rev": "bc2742a09abbd0d2ca1fd8665baff1b24060df3d",
+        "rev": "a4ee044e3a1d0de60807ee185c41a0490bbe3842",
         "type": "github"
       },
       "original": {
