@@ -3,11 +3,11 @@
     "clangdExtensionSrc": {
       "flake": false,
       "locked": {
-        "lastModified": 1639108770,
-        "narHash": "sha256-0UaUN4AvUMHiZjQGJMwPuqgrGNx5GMUMqkx+AuK7gsc=",
+        "lastModified": 1645789190,
+        "narHash": "sha256-OaTpmsJV7kvmoYfO2QE2XRnKoQspwHLU3QKJZE9Emw0=",
         "owner": "clangd",
         "repo": "vscode-clangd",
-        "rev": "eea40252f04c8f49d443ebfe3b4f5ddac84593d0",
+        "rev": "98aaafea8b0595188b7166e8a9e4df0939445839",
         "type": "github"
       },
       "original": {
@@ -32,31 +32,63 @@
         "type": "github"
       }
     },
-    "nixpkgs": {
+    "filter": {
       "locked": {
-        "lastModified": 1645042795,
-        "narHash": "sha256-BN5YHGGwsnap6TAl/twHwBywgCs03siJBroU3dLCvF8=",
-        "owner": "mstone",
-        "repo": "nixpkgs",
-        "rev": "d14244af25c607daba11d6786ee46bc2a8effd2a",
+        "lastModified": 1645371475,
+        "narHash": "sha256-z2n0y5ME7yQTqzzGWnQTVd1MG5Bp1E+of7ZgA861/9E=",
+        "owner": "numtide",
+        "repo": "nix-filter",
+        "rev": "38bc843f1ce76958a9f6f0a1e4e3455221c8ecf6",
         "type": "github"
       },
       "original": {
-        "owner": "mstone",
-        "ref": "rust-analyzer-2022-02-14",
-        "repo": "nixpkgs",
+        "owner": "numtide",
+        "repo": "nix-filter",
         "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1647350163,
+        "narHash": "sha256-OcMI+PFEHTONthXuEQNddt16Ml7qGvanL3x8QOl2Aao=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "3eb07eeafb52bcbf02ce800f032f18d666a9498d",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "rev": "3eb07eeafb52bcbf02ce800f032f18d666a9498d",
+        "type": "indirect"
       }
     },
     "root": {
       "inputs": {
         "clangdExtensionSrc": "clangdExtensionSrc",
         "codiumSrc": "codiumSrc",
+        "filter": "filter",
         "nixpkgs": "nixpkgs",
+        "rust-analyzerSrc": "rust-analyzerSrc",
         "rust-overlay": "rust-overlay",
         "utils": "utils",
         "vscode-drawio": "vscode-drawio",
         "vscodeSrc": "vscodeSrc"
+      }
+    },
+    "rust-analyzerSrc": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1645894811,
+        "narHash": "sha256-GJFSPgUZ+j/vgq1Ne0wCqor/iwjBMiGa3O5QFnjIP6s=",
+        "owner": "rust-analyzer",
+        "repo": "rust-analyzer",
+        "rev": "b86baa709282a07e6678744a31b0d18e51a60504",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rust-analyzer",
+        "repo": "rust-analyzer",
+        "type": "github"
       }
     },
     "rust-overlay": {
@@ -69,11 +101,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1644892557,
-        "narHash": "sha256-z4iE8n2d846imTaOissT78wEEa3GvnhAmTJzpJgUduM=",
+        "lastModified": 1645841894,
+        "narHash": "sha256-xNeqVlZEmg/QlhQLY5SfVa73x6IUfET+tHCJP3w067U=",
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "rev": "6d50a4f52d517a53cf740a9746f4e226ac17cf6a",
+        "rev": "7f273929e83a196f96a0dbee9ea565952e340bd6",
         "type": "github"
       },
       "original": {
@@ -100,11 +132,11 @@
     "vscode-drawio": {
       "flake": false,
       "locked": {
-        "lastModified": 1640079543,
-        "narHash": "sha256-UzVgWU0M/DqqJCgVLgTdQIZiA0brleGS65mO8vm/sWg=",
+        "lastModified": 1641551797,
+        "narHash": "sha256-LPq0CVvqPS0QreMXylQ4aNc4H/YspvDIai42cpbqrpo=",
         "ref": "master",
-        "rev": "f18d9efa07a3d0ae4a4cd9d1a1f3a3ffa99f84df",
-        "revCount": 284,
+        "rev": "b54c72a90dac6fe7c5643369588136d394f90bc2",
+        "revCount": 287,
         "submodules": true,
         "type": "git",
         "url": "https://github.com/hediet/vscode-drawio"
@@ -118,11 +150,11 @@
     "vscodeSrc": {
       "flake": false,
       "locked": {
-        "lastModified": 1644942007,
-        "narHash": "sha256-XoaFvR4sVhAtai2s7SBVOD3iisD08nUP1Jgx4z94X+0=",
+        "lastModified": 1645866861,
+        "narHash": "sha256-TfnfngCyzP5F0i8iLL3Vye5EZdXanF0oDRxv1eHWDZ8=",
         "owner": "microsoft",
         "repo": "vscode",
-        "rev": "bd465c03efb8a3d3205103c2efa98684da584666",
+        "rev": "7e57af782039727e21d8e63ce0c671ce9004286b",
         "type": "github"
       },
       "original": {

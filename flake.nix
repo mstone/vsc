@@ -2,15 +2,20 @@
 {
   description = "A flake for building codium with selected extensions";
 
-  inputs.nixpkgs.url = "github:mstone/nixpkgs/rust-analyzer-2022-02-14";
+  inputs.nixpkgs.url = "nixpkgs/3eb07eeafb52bcbf02ce800f032f18d666a9498d";
 
   inputs.utils.url = "github:numtide/flake-utils";
+
+  inputs.filter.url = "github:numtide/nix-filter";
 
   inputs.codiumSrc.url = "github:mstone/vscodium";
   inputs.codiumSrc.flake = false;
 
   inputs.vscodeSrc.url = "github:microsoft/vscode";
   inputs.vscodeSrc.flake = false;
+
+  inputs.rust-analyzerSrc.url = "github:rust-analyzer/rust-analyzer";
+  inputs.rust-analyzerSrc.flake = false;
 
   inputs.rust-overlay.url = "github:oxalica/rust-overlay";
   inputs.rust-overlay.inputs.flake-utils.follows = "utils";
@@ -24,7 +29,7 @@
   inputs.clangdExtensionSrc.url = "github:clangd/vscode-clangd";
   inputs.clangdExtensionSrc.flake = false;
 
-  outputs = { self, nixpkgs, utils, codiumSrc, vscodeSrc, rust-overlay, vscode-drawio, clangdExtensionSrc }: let
+  outputs = { self, nixpkgs, utils, filter, codiumSrc, vscodeSrc, rust-analyzerSrc, rust-overlay, vscode-drawio, clangdExtensionSrc }: let
     name = "codium";
   in utils.lib.simpleFlake {
     inherit self nixpkgs name;
@@ -35,7 +40,16 @@
     };
     overlay = final: prev: {
       codium = with final; rec {
-	env = [ rust-bin.stable.latest.default asciidoctor go_1_16 python39 coreutils gitFull ];
+	env = [ 
+          rust-bin.stable.latest.default 
+          asciidoctor 
+          go_1_16 
+          python39 
+          coreutils 
+          gitFull 
+          (terraform.withPlugins (ps: with ps; [ aws gandi vultr ] ))
+          cmake
+        ];
 
         codiumVersion = "1.65.0";
 
@@ -149,6 +163,38 @@
           '';
         };
 
+        ra = stdenv.mkDerivation rec {
+          name = "vscode-extension-matklad.rust-analyzer";
+          vscodeExtUniqueId = "matklad.rust-analyzer";
+          version = "0.4.0-dev";
+          src = filter.lib { 
+            root = rust-analyzerSrc + "/editors/code";
+          };
+          buildInputs = [ tree unzip yarn nodePackages.npm nodejs-14_x nodePackages.node-gyp ];
+          nativeBuildInputs = [ jq moreutils ];
+          buildPhase = ''
+            #mkdir yarn && HOME=$(pwd)/yarn yarn install --immutable && yarn build
+            mkdir -p "$(pwd)/home"
+            export HOME="$(pwd)/home"
+            npm ci
+            npm run package
+          '';
+          installPrefix = "share/vscode/extensions/${vscodeExtUniqueId}";
+          installPhase = ''
+            origDir="$(pwd)"
+            mkdir -p "$out/$installPrefix/";
+            cd "$out/$installPrefix";
+            unzip "$origDir/rust-analyzer.vsix"
+            mv extension/* .
+            rmdir extension
+            rm *.xml
+            rm extension.vsixmanifest
+            jq '.contributes.configuration.properties."rust-analyzer.server.path".default = $s' \
+              --arg s "${rust-analyzer}/bin/rust-analyzer" \
+              package.json | sponge package.json
+          '';
+        };
+
         llvm-vs-code-extensions.vscode-clangd = stdenv.mkDerivation rec {
           name = "vscode-extension-llvm-vs-code-extensions.vscode-clangd";
           vscodeExtUniqueId = "llvm-vs-code-extensions.vscode-clangd";
@@ -174,11 +220,13 @@
           vscode = codiumGeneric;
           vscodeExtensions = with vscode-extensions; [
             bbenoist.nix
-            matklad.rust-analyzer
+            #matklad.rust-analyzer
+            ra
             usernamehw.errorlens
             golang.go
             hediet.vscode-drawio
             #llvm-vs-code-extensions.vscode-clangd
+            hashicorp.terraform
           ];
         };
 
