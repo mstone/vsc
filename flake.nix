@@ -33,7 +33,7 @@
     name = "codium";
   in utils.lib.simpleFlake {
     inherit self nixpkgs name;
-    preOverlays = [ rust-overlay.overlay ];
+    preOverlays = [ rust-overlay.overlays.default ];
     systems = utils.lib.defaultSystems;
     config = {
       allowUnsupportedSystem = true;
