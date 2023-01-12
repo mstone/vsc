@@ -227,6 +227,7 @@
             hediet.vscode-drawio
             #llvm-vs-code-extensions.vscode-clangd
             hashicorp.terraform
+            asciidoctor.asciidoctor-vscode
           ];
         };
 
